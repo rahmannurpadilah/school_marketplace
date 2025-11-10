@@ -1,7 +1,7 @@
-export default function AdminDashboardPage() {
+export default function AdminUsersPage() {
     return (
         <main>
             
         </main>
-    );
+    )
 }
