@@ -16,7 +16,7 @@ import { useState } from "react";
 const menuItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: "dashboard" },
     { name: "Users", href: "/admin/users", icon: "users" },
-    { name: "Product Categories", href: "/admin/product-categories", icon: "categories" },
+    { name: "Product Categories", href: "/admin/categories", icon: "categories" },
     { name: "Products", href: "/admin/products", icon: "products" },
 ];
 
@@ -53,7 +53,7 @@ export function AdminLayoutClient({
             {menuItems.map((item, index) => (
               <Link key={index} href={item.href}>
                 <div className={`flex gap-3 px-4 py-3 border-b border-border ${isSidebarOpen ? "justify-start" : "justify-center"} items-center 
-                  ${pathname === item.href ? "bg-secondary cursor-auto" : "hover:bg-secondary/50 hover:text-text-secondary delay-50 transition-all ease-in-out duration-200 cursor-pointer"}
+                  ${pathname === item.href ? "bg-secondary cursor-auto text-white dark:text-black" : "hover:bg-secondary/50 hover:text-text-secondary delay-50 transition-all ease-in-out duration-200 cursor-pointer"}
                 `}>
                   {item.icon === "dashboard" && <LayoutDashboard size={20} />}
                   {item.icon === "users" && <Users size={20} />}
@@ -91,7 +91,7 @@ export function AdminLayoutClient({
                   onClick={toggleSidebarMobile}
                 >
                   <div className={`flex gap-3 px-4 py-3 border-b border-border items-center
-                    ${pathname === item.href ? "bg-secondary cursor-auto" : "hover:bg-secondary/50 hover:text-text-secondary delay-100 transition-all ease-in-out duration-200 cursor-pointer"} 
+                    ${pathname === item.href ? "bg-secondary cursor-auto text-white dark:text-black" : "hover:bg-secondary/50 hover:text-text-secondary delay-100 transition-all ease-in-out duration-200 cursor-pointer"} 
                   `}>
                     {item.icon === "dashboard" && <LayoutDashboard size={20} />}
                     {item.icon === "users" && <Users size={20} />}

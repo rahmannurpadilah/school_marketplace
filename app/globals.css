@@ -2,7 +2,7 @@
 
 :root {
   --primary: #4F46E5;      /* Biru ungu lembut */
-  --secondary: #10B981;    /* Hijau segar */
+  --secondary: #1B1B1B;    /* Hitam Eerie */
   --background: #F8FAFC;   /* Putih abu-abu sangat lembut */
   --surface: #FFFFFF;      /* Putih bersih */
   --text-primary: #1E293B; /* Abu-abu gelap (bukan hitam murni) */
@@ -28,7 +28,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
   --primary: #6366F1;      /* Biru ungu lebih terang */
-  --secondary: #34D399;    /* Hijau mint cerah */
+  --secondary: #F8F7F3;    /* Putih */
   --background: #0F172A;   /* Biru tua sangat gelap */
   --surface: #1E293B;      /* Biru abu-abu gelap */
   --text-primary: #F1F5F9; /* Putih abu-abu sangat lembut */

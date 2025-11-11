@@ -1,27 +1,56 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-//Methode GET atau ambil semua data
+// Mendapatkan semua kategori produk
 export async function GET() {
-    try {
-        const categories = await prisma.category.findMany()
-        return NextResponse.json({"data": categories}, {status: 200})
-    }catch (error){
-        return NextResponse.json({"message": "Error retrieving categories"}, {status: 500})
+    // Menggunakan try-catch untuk menangani error
+    try{
+        const category = await prisma.category.findMany()
+        // Mengembalikan response sukses dengan data kategori
+        return NextResponse.json({ data: category}, { status: 200})
+    }catch (error) {
+        // Mengembalikan response error
+        return NextResponse.json({ error: error}, { status: 500})
     }
 }
 
-//Methode POST atau menambah data
-export async function POST(request: Request){
-    try{
+// Menambahkan kategori produk baru
+export async function POST(request: Request) {
+    // Menggunakan try-catch untuk menangani error
+    try {
+        // Mendapatkan data dari body request
         const body = await request.json()
-        const category = await prisma.category.create({
+        // Destructuring untuk mendapatkan category_name
+        const { category_name } = body
+
+        // Validasi input
+        if (!category_name) {
+            return NextResponse.json(
+                { error: "Nama kategori wajib diisi" },
+                { status: 400 }
+            )
+        }
+
+        // Menambahkan kategori baru ke database
+        const newCategory = await prisma.category.create({
             data: {
-                category_name: body.category_name
+                category_name: category_name,
             }
         })
-        return NextResponse.json({"data": category}, {status: 201})
-    }catch (error){
-        return NextResponse.json({"message": "Error creating category"}, {status: 500})
-    }
+
+        // Mengembalikan response sukses
+        return NextResponse.json({ data: newCategory}, { status: 200})
+    }catch (error: any) {
+    console.error("PRISMA ERROR:", error) // <-- tambahkan log
+    return NextResponse.json(
+        { 
+            error: "Tidak bisa menambahkan kategori baru", 
+            message: error.message,
+            code: error.code,
+            name: error.name
+        }, 
+        { status: 500 }
+    )
+}
+
 }
