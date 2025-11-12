@@ -8,21 +8,7 @@ type GET = {
   catagory_name: string;
 }
 
-export async function CategoryTable() {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  const res = await fetch(`${baseUrl}/api/category`, {
-    cache: "no-store"
-  });
-
-  if (!res.ok) {
-    throw new Error("Gagal mendapatkan data");
-  }
-
-  const result = await res.json();
-  const get: GET[] = result.data;
-
-  console.log(get);
-
+export function CategoryTable() {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       {/* Search bar */}
@@ -92,9 +78,8 @@ export async function CategoryTable() {
         </thead>
 
         <tbody>
-          {get.map((item) => (
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-              key={item.id}
+              
             >
               <td className="w-4 p-4">
                 <div className="flex items-center">
@@ -112,7 +97,7 @@ export async function CategoryTable() {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                {item.catagory_name}
+                udin
               </th>
               <td className="px-6 py-4">Silver</td>
               <td className="px-6 py-4">Laptop</td>
@@ -132,7 +117,6 @@ export async function CategoryTable() {
                 </Link>
               </td>
             </tr>
-          ))}
         </tbody>
       </table>
     </div>
