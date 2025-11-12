@@ -1,14 +1,16 @@
 "use client";
 
+import { Category } from "@/app/types/category";
 import Link from "next/link";
-import { Category } from '@prisma/client';
+import { use } from "react";
 
-type GET = {
-  id: string;
-  catagory_name: string;
-}
+export function CategoryTable({
+  categoryPromise
+}: {
+  categoryPromise: Promise<Category[]>;
+}) {
+  const category = use(categoryPromise);
 
-export function CategoryTable() {
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       {/* Search bar */}
@@ -60,26 +62,18 @@ export function CategoryTable() {
               </div>
             </th>
             <th scope="col" className="px-6 py-3">
-              Product name
+              Nama Kategori
             </th>
             <th scope="col" className="px-6 py-3">
-              Color
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Category
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Price
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Action
+              Aksi
             </th>
           </tr>
         </thead>
 
         <tbody>
+          {category.map((item) => (
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-              
+              key={item.id}
             >
               <td className="w-4 p-4">
                 <div className="flex items-center">
@@ -97,11 +91,8 @@ export function CategoryTable() {
                 scope="row"
                 className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                udin
+                {item.category_name}
               </th>
-              <td className="px-6 py-4">Silver</td>
-              <td className="px-6 py-4">Laptop</td>
-              <td className="px-6 py-4">$2999</td>
               <td className="px-6 py-4 flex gap-3">
                 <Link
                   href="/products/edit/1"
@@ -117,6 +108,7 @@ export function CategoryTable() {
                 </Link>
               </td>
             </tr>
+          ))}
         </tbody>
       </table>
     </div>

@@ -1,29 +1,15 @@
-import { GET } from "@/app/api/category/route";
+import { GetCategory } from "@/app/queries/categoryquery";
 import { CategoryTable } from "./table";
-import { Category } from '@prisma/client';
+import { Suspense } from "react";
 
-type GET = {
-    id: string;
-    category_name: string;
-}
-
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
-
-async function GetPost(): Promise<GET[]>{
-    const res = await fetch(`${baseUrl}/api/category`);
-    const pos = await res.json();
-
-    return pos;
-}
 export default async function CategoryPage(){
-    const get = await GetPost();
+    // jangan di await kalau mau dipakai di client server
+    const category = GetCategory();
     return(
         <main className="py-4 px-8">
-            {get.map((item) => (
-                <ul key={item.id}>
-                    <li>{item.category_name}</li>
-                </ul>
-            ))}
+            <Suspense fallback="Loading ...">
+                <CategoryTable categoryPromise={category}/>
+            </Suspense>
         </main>
     )
 }
