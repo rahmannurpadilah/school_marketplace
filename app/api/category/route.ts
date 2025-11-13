@@ -1,56 +1,56 @@
 import { prisma } from "@/lib/prisma";
+import { error } from "console";
 import { NextResponse } from "next/server";
 
 // Mendapatkan semua kategori produk
 export async function GET() {
-    // Menggunakan try-catch untuk menangani error
-    try{
-        const category = await prisma.category.findMany()
-        // Mengembalikan response sukses dengan data kategori
-        return NextResponse.json({ data: category}, { status: 200})
-    }catch (error) {
-        // Mengembalikan response error
-        return NextResponse.json({ error: error}, { status: 500})
+    try {
+        const categories = await prisma.category.findMany({
+            orderBy: {
+                id: 'desc'
+            }
+        });
+
+        return NextResponse.json({
+            success: true,
+            data: categories
+        });
+    } catch (error) {
+        console.error(`Error fetching categories:`, error);
+        return NextResponse.json({
+            success: false,
+            error: 'Internal server error'
+        },{ status: 500 });
     }
 }
 
 // Menambahkan kategori produk baru
 export async function POST(request: Request) {
-    // Menggunakan try-catch untuk menangani error
     try {
-        // Mendapatkan data dari body request
-        const body = await request.json()
-        // Destructuring untuk mendapatkan category_name
-        const { category_name } = body
+        const body = await request.json();
 
-        // Validasi input
-        if (!category_name) {
-            return NextResponse.json(
-                { error: "Nama kategori wajib diisi" },
-                { status: 400 }
-            )
-        }
-
-        // Menambahkan kategori baru ke database
-        const newCategory = await prisma.category.create({
+        if (!body.category_name || body.category_name.trim() === '') {
+            return NextResponse.json({
+                success: false,
+                error: 'Form harus diisi'
+            }, { status: 400 })
+        };
+        
+        const category = await prisma.category.create({
             data: {
-                category_name: category_name,
+                category_name: body.category_name.trim()
             }
+        });
+
+        return NextResponse.json({
+            success: true,
+            data: category
         })
-
-        // Mengembalikan response sukses
-        return NextResponse.json({ data: newCategory}, { status: 200})
-    }catch (error: any) {
-    console.error("PRISMA ERROR:", error) // <-- tambahkan log
-    return NextResponse.json(
-        { 
-            error: "Tidak bisa menambahkan kategori baru", 
-            message: error.message,
-            code: error.code,
-            name: error.name
-        }, 
-        { status: 500 }
-    )
-}
-
+    } catch (error) {
+        console.error(`Error creating category: `, error);
+        return NextResponse.json({
+            success: false,
+            error: 'Internal server error'
+        }, { status: 500 })
+    }
 }

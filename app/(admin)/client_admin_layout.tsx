@@ -41,7 +41,7 @@ export function AdminLayoutClient({
     <main>
       <div className="flex">
         {/* === Desktop Sidebar === */}
-        <aside className={`w-[300px] ${isSidebarOpen ? "md:w-[300px]" : "md:w-[80px]"} h-screen md:block hidden shadow-xl shadow-text-primary rounded-tr-lg transition-all duration-300 ease-in-out`}>
+        <aside className={`w-[300px] ${isSidebarOpen ? "md:w-[300px]" : "md:w-[80px]"} md:block hidden shadow-xl shadow-text-primary rounded-tr-lg transition-all duration-300 ease-in-out`}>
           <div className={`pt-3 md:flex ${isSidebarOpen ? "justify-end" : "justify-center"} items-center px-2 pb-4 hidden`}>
             {isSidebarOpen && <span className="font-bold text-lg w-full text-center">Admin Menu</span>}
             {isSidebarOpen ? 
@@ -120,7 +120,7 @@ export function AdminLayoutClient({
           </header>
 
           {/* === Content === */}
-          <div className="p-4">
+          <div className="p-4 overflow-y-auto h-[calc(100vh-56px)]">
             {children}
           </div>
         </div>

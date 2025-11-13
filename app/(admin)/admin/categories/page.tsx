@@ -1,15 +1,14 @@
-import { GetCategory } from "./actions";
+import { GetCategory } from "@/app/queries/category";
 import { CategoryTable } from "./components/table";
-import { Suspense } from "react";
 
 export default async function CategoryPage(){
     // jangan di await kalau mau dipakai di client server
     const category = GetCategory();
+    
     return(
         <main className="py-4 px-8">
-            <Suspense fallback="Loading ...">
-                <CategoryTable categoryPromise={category}/>
-            </Suspense>
+            {/* <CategoryTable categoryPromise={category}/> */}
+            <CategoryTable categoryPromise={category}/>
         </main>
     )
 }

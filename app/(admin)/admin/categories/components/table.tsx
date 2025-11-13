@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { use } from "react";
-import { CreateCategory } from "./createcategory";
-import { CATEGORY } from "../type";
+import { use, useState } from "react";
+import { CATEGORY } from "@/app/types/category";
+import { CreateCategory, GetCategory } from "@/app/queries/category";
 
 export function CategoryTable({
   categoryPromise
@@ -11,11 +11,44 @@ export function CategoryTable({
   categoryPromise: Promise<CATEGORY[]>;
 }) {
   const category = use(categoryPromise);
+  const [ categories, setCategories ] = useState<CATEGORY[]>(category);
+  const [ category_name, setCategory_name ] = useState('');
+  const [ loading, setLoading ] = useState(false);
+  const [ message, setMessage ] = useState('');
+  const [ editingId, setEditingId ] = useState<string | null>(null)
+  const [ editcategory_name, setCategory_Name ] = useState('');
 
+  const startEdit = (category: CATEGORY) => {
+    setEditingId(category.id);
+    setEditName
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    const result = await CreateCategory({
+      category_name
+    });
+
+    if (result.success) {
+      setMessage('Berhasil menambah kategori');
+      setCategory_name('');
+
+      const newCategories = await GetCategory();
+      setCategories(newCategories);
+    }else {
+      setMessage(`Error: ${result.error}`);
+    }
+
+    setLoading(false);
+  }
+  
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
       {/* Search bar */}
-      <div className="flex">  
+      <div className="flex justify-between">  
         <div className="pb-4 bg-white dark:bg-gray-900">
           <label htmlFor="table-search" className="sr-only">
             Search
@@ -48,7 +81,29 @@ export function CategoryTable({
         </div>
 
         {/* Tambah */}
-        <CreateCategory />
+        <form onSubmit={handleSubmit}>
+            <div className="bg-primary flex">
+                <input 
+                    type="text" 
+                    id="category_name" 
+                    value={category_name}  
+                    onChange={(e) => setCategory_name(e.target.value)}
+                    required
+                    className="block py-1 px-1 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                />
+                <button 
+                    type="submit"
+                    disabled={loading}
+                >
+                </button>   
+
+                {/* { message && (
+                    <p className={`${message.includes('Error') ? 'text-red-600' : 'text-green-600'}`}>
+                        {message}
+                    </p>
+                )} */}
+            </div>
+        </form>
       </div>
 
       {/* Table */}
@@ -77,7 +132,7 @@ export function CategoryTable({
         </thead>
 
         <tbody>
-          {category.map((item) => (
+          {categories.map((item) => (
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
               key={item.id}
             >
