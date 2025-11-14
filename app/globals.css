@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #4F46E5;      /* Biru ungu lembut */
+  --primary: #ffffff;      /* Putih */
   --secondary: #1B1B1B;    /* Hitam Eerie */
-  --background: #F8FAFC;   /* Putih abu-abu sangat lembut */
+  --background: #f8fafc;   /* gray-50 - bg page */
   --surface: #FFFFFF;      /* Putih bersih */
-  --text-primary: #1E293B; /* Abu-abu gelap (bukan hitam murni) */
-  --text-secondary: #64748B; /* Abu-abu medium */
+  --text-primary: #1f2937; /* Abu-abu gelap (bukan hitam murni) */
+  --text-secondary: #2563eb; /* Abu-abu medium */
   --accent: #F59E0B;       /* Kuning emas untuk aksen */
-  --border: #E2E8F0;       /* Garis pembatas lembut */
+  --border: #e5e7eb;       /* Garis pembatas lembut */
 }
 
 @theme inline {
@@ -27,14 +27,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-  --primary: #6366F1;      /* Biru ungu lebih terang */
+  --primary: #1f2937;      /* Biru ungu lebih terang */
   --secondary: #F8F7F3;    /* Putih */
-  --background: #0F172A;   /* Biru tua sangat gelap */
+  --background: #111827;   /* Biru tua sangat gelap */
   --surface: #1E293B;      /* Biru abu-abu gelap */
-  --text-primary: #F1F5F9; /* Putih abu-abu sangat lembut */
-  --text-secondary: #94A3B8; /* Abu-abu terang */
+  --text-primary: #f9fafb; /* Putih abu-abu sangat lembut */
+  --text-secondary: #60a5fa; /* Abu-abu terang */
   --accent: #FBBF24;       /* Kuning lebih terang */
-  --border: #334155;       /* Garis pembatas gelap */
+  --border: #374151;       /* Garis pembatas gelap */
   }
 }
 

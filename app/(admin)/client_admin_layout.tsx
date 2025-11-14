@@ -7,20 +7,22 @@ import {
     LayoutDashboard,
     Menu, 
     Package, 
-    Users 
+    Users,
+    X
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+
 const menuItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: "dashboard" },
-    { name: "Users", href: "/admin/users", icon: "users" },
+    { name: "Members", href: "/admin/members", icon: "users" },
     { name: "Product Categories", href: "/admin/categories", icon: "categories" },
     { name: "Products", href: "/admin/products", icon: "products" },
 ];
 
-export function AdminLayoutClient({
+export function AdminLayoutClient({   
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -38,91 +40,158 @@ export function AdminLayoutClient({
   };
 
   return (
-    <main>
-      <div className="flex">
+    <main className="min-h-screen bg-background">
+      <div className="flex h-screen">
         {/* === Desktop Sidebar === */}
-        <aside className={`w-[300px] ${isSidebarOpen ? "md:w-[300px]" : "md:w-[80px]"} md:block hidden shadow-xl shadow-text-primary rounded-tr-lg transition-all duration-300 ease-in-out`}>
-          <div className={`pt-3 md:flex ${isSidebarOpen ? "justify-end" : "justify-center"} items-center px-2 pb-4 hidden`}>
-            {isSidebarOpen && <span className="font-bold text-lg w-full text-center">Admin Menu</span>}
-            {isSidebarOpen ? 
-              <ArrowBigLeft onClick={toggleSidebar} className="cursor-pointer"/>
-              : <ArrowBigRight onClick={toggleSidebar} className="cursor-pointer"/>
-            }
+        <aside className={`${isSidebarOpen ? "w-[280px]" : "w-[80px]"} md:flex hidden flex-col bg-primary border-r border-border transition-all duration-300 ease-in-out`}>
+          {/* Sidebar Header */}
+          <div className={`h-16 flex items-center ${isSidebarOpen ? "justify-between px-6" : "justify-center"} border-b border-border bg-background/50`}>
+            {isSidebarOpen && (
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+                  <LayoutDashboard size={18} className="text-white dark:text-black" />
+                </div>
+                <span className="font-bold text-lg text-text-primary">Admin Panel</span>
+              </div>
+            )}
+            <button 
+              onClick={toggleSidebar}
+              className="p-2 rounded-lg hover:bg-background transition-colors"
+            >
+              {isSidebarOpen ? 
+                <ArrowBigLeft size={20} className="text-text-primary"/>
+                : <ArrowBigRight size={20} className="text-text-primary"/>
+              }
+            </button>
           </div>
-          <div className="bg-primary h-screen rounded-tr-lg border-t-3 border-border overflow-y-auto">
+
+          {/* Menu Items */}
+          <nav className="flex-1 overflow-y-auto py-4">
             {menuItems.map((item, index) => (
               <Link key={index} href={item.href}>
-                <div className={`flex gap-3 px-4 py-3 border-b border-border ${isSidebarOpen ? "justify-start" : "justify-center"} items-center 
-                  ${pathname === item.href ? "bg-secondary cursor-auto text-white dark:text-black" : "hover:bg-secondary/50 hover:text-text-secondary delay-50 transition-all ease-in-out duration-200 cursor-pointer"}
+                <div className={`
+                  flex items-center gap-3 mx-2 mb-1 px-4 py-3 rounded-lg
+                  ${isSidebarOpen ? "justify-start" : "justify-center"}
+                  ${pathname === item.href 
+                    ? "bg-secondary text-white dark:text-black shadow-sm" 
+                    : "text-text-primary hover:bg-secondary/10 hover:text-secondary"
+                  }
+                  transition-all duration-200 cursor-pointer
                 `}>
                   {item.icon === "dashboard" && <LayoutDashboard size={20} />}
                   {item.icon === "users" && <Users size={20} />}
                   {item.icon === "categories" && <Layers size={20} />}
                   {item.icon === "products" && <Package size={20} />}
-                  <span className={`${isSidebarOpen ? "md:block" : "md:hidden"} block`}>
-                    {item.name}
-                  </span>
+                  {isSidebarOpen && (
+                    <span className="font-medium text-sm">
+                      {item.name}
+                    </span>
+                  )}
                 </div>
               </Link>
             ))}
-          </div>
+          </nav>
+
+          {/* Sidebar Footer */}
+          {isSidebarOpen && (
+            <div className="p-4 border-t border-border">
+              <div className="text-xs text-text-primary/60 text-center">
+                © 2024 Admin Panel
+              </div>
+            </div>
+          )}
         </aside>
 
-        {/* === Mobile Sidebar === */}
-        <div className="">
-          {isSidebarMobileOpen && (
-            <div 
-              onClick={toggleSidebarMobile} 
-              className="fixed inset-0 bg-text-primary/40 transition-opacity duration-300 z-40"
-            ></div>
-          )}
-          <aside className={`fixed bg-background md:hidden top-0 left-0 w-[300px] h-screen rounded-tr-lg border-t-3 border-border 
-            transition-transform duration-300 ease-in ${isSidebarMobileOpen ? "translate-x-0 shadow-xl shadow-text-primary" : "-translate-x-full"} z-50
-          `}>
-            <div className="pt-3 items-center px-2 pb-4 flex">
-              <span className="font-bold text-lg w-full text-center">Admin Menu</span>
-              <ArrowBigLeft onClick={toggleSidebarMobile} className="cursor-pointer" />
-            </div>
-            <div className="bg-primary h-screen rounded-tr-lg border-t-3 border-border overflow-y-auto">
-              {menuItems.map((item, index) => (
-                <Link 
-                  key={index} 
-                  href={item.href}
-                  onClick={toggleSidebarMobile}
-                >
-                  <div className={`flex gap-3 px-4 py-3 border-b border-border items-center
-                    ${pathname === item.href ? "bg-secondary cursor-auto text-white dark:text-black" : "hover:bg-secondary/50 hover:text-text-secondary delay-100 transition-all ease-in-out duration-200 cursor-pointer"} 
-                  `}>
-                    {item.icon === "dashboard" && <LayoutDashboard size={20} />}
-                    {item.icon === "users" && <Users size={20} />}
-                    {item.icon === "categories" && <Layers size={20} />}
-                    {item.icon === "products" && <Package size={20} />}
-                    <span>{item.name}</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </aside>
-        </div>
+        {/* === Mobile Sidebar Overlay === */}
+        {isSidebarMobileOpen && (
+          <div 
+            onClick={toggleSidebarMobile} 
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 z-40 md:hidden"
+          />
+        )}
 
-        <div className="w-full">
-          {/* === Header === */}
-          <header className="flex h-14 border-b border-border md:ml-4 items-center">
-            <div className="block md:hidden ml-4">
-              <Menu 
-                onClick={toggleSidebarMobile} 
-                className={`mt-2 cursor-pointer ${isSidebarMobileOpen ? "hidden" : "block"}`} 
-              />
+        {/* === Mobile Sidebar === */}
+        <aside className={`
+          fixed md:hidden top-0 left-0 w-[280px] h-screen bg-primary border-r border-border
+          transition-transform duration-300 ease-in-out z-50
+          ${isSidebarMobileOpen ? "translate-x-0" : "-translate-x-full"}
+        `}>
+          {/* Mobile Header */}
+          <div className="h-16 flex items-center justify-between px-6 border-b border-border bg-background/50">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center">
+                <LayoutDashboard size={18} className="text-white dark:text-black" />
+              </div>
+              <span className="font-bold text-lg text-text-primary">Admin Panel</span>
             </div>
-            <div className="ml-4 md:ml-0">
-              <h1 className="text-lg font-semibold">Admin Dashboard</h1>
+            <button 
+              onClick={toggleSidebarMobile}
+              className="p-2 rounded-lg hover:bg-background transition-colors"
+            >
+              <X size={20} className="text-text-primary" />
+            </button>
+          </div>
+
+          {/* Mobile Menu Items */}
+          <nav className="overflow-y-auto py-4">
+            {menuItems.map((item, index) => (
+              <Link 
+                key={index} 
+                href={item.href}
+                onClick={toggleSidebarMobile}
+              >
+                <div className={`
+                  flex items-center gap-3 mx-2 mb-1 px-4 py-3 rounded-lg
+                  ${pathname === item.href 
+                    ? "bg-secondary text-white dark:text-black shadow-sm" 
+                    : "text-text-primary hover:bg-secondary/10 hover:text-secondary"
+                  }
+                  transition-all duration-200 cursor-pointer
+                `}>
+                  {item.icon === "dashboard" && <LayoutDashboard size={20} />}
+                  {item.icon === "users" && <Users size={20} />}
+                  {item.icon === "categories" && <Layers size={20} />}
+                  {item.icon === "products" && <Package size={20} />}
+                  <span className="font-medium text-sm">{item.name}</span>
+                </div>
+              </Link>
+            ))}
+          </nav>
+        </aside>
+
+        {/* === Main Content Area === */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* === Header === */}
+          <header className="h-16 flex items-center justify-between px-6 border-b border-border bg-background/80 backdrop-blur-sm">
+            <div className="flex items-center gap-4">
+              <button 
+                onClick={toggleSidebarMobile}
+                className="md:hidden p-2 rounded-lg hover:bg-primary transition-colors"
+              >
+                <Menu size={20} className="text-text-primary" />
+              </button>
+              <div>
+                <h1 className="text-xl font-bold text-text-primary">
+                  {menuItems.find(item => item.href === pathname)?.name || "Admin Dashboard"}
+                </h1>
+                <p className="text-xs text-text-primary/60">
+                  Manage your application
+                </p>
+              </div>
+            </div>
+
+            {/* Header Actions */}
+            <div className="flex items-center gap-2">
+              {/* You can add user profile, notifications, etc here */}
             </div>
           </header>
 
-          {/* === Content === */}
-          <div className="p-4 overflow-y-auto h-[calc(100vh-56px)]">
-            {children}
-          </div>
+          {/* === Content Area === */}
+          <main className="flex-1 overflow-y-auto bg-background p-6">
+            <div className="max-w-7xl mx-auto">
+              {children}
+            </div>
+          </main>
         </div>
       </div>
     </main>
